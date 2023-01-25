@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import co.talesbruno.notes.models.NoteViewModel
 import co.talesbruno.notes.ui.home.HomeScreen
 import co.talesbruno.notes.ui.theme.NotesTheme
@@ -19,6 +20,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val noteViewModel: NoteViewModel by viewModels()
+
+        installSplashScreen()
 
         setContent {
             NotesTheme {
