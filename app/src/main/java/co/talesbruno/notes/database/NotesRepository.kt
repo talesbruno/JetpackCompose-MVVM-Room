@@ -1,11 +1,11 @@
 package co.talesbruno.notes.database
 
-import androidx.lifecycle.LiveData
+
 import co.talesbruno.notes.models.Note
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
-class NotesRepository(private val noteDao: NoteDao) {
+class NotesRepository @Inject constructor(private val noteDao: NoteDao) {
 
     fun allNotes(): Flow<List<Note>> = noteDao.getAllNotes()
 

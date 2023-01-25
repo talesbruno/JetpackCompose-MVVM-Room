@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import co.talesbruno.notes.models.Note
 import co.talesbruno.notes.utils.DATABASE_NAME
 
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [Note::class], version = 1, exportSchema = false)
 abstract class NoteDatabase: RoomDatabase(){
 
     abstract fun NoteDao(): NoteDao

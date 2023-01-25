@@ -1,24 +1,16 @@
 package co.talesbruno.notes.models
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import co.talesbruno.notes.database.NoteDao
 import co.talesbruno.notes.database.NotesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NoteViewModel(private val notesRepository: NotesRepository): ViewModel() {
-
-//    private val _selectedNoteState: MutableState<Note?> = mutableStateOf(null)
-//    val selectedNoteState: State<Note?>
-//        get() = _selectedNoteState
+@HiltViewModel
+class NoteViewModel @Inject constructor(private val notesRepository: NotesRepository): ViewModel() {
 
     val notes: Flow<List<Note>> = notesRepository.allNotes()
 
@@ -38,13 +30,5 @@ class NoteViewModel(private val notesRepository: NotesRepository): ViewModel() {
         viewModelScope.launch(Dispatchers.IO){
             notesRepository.insert(note)
         }
-    }
-}
-
-class NoteViewModelFactory(
-    private val NotesRepository: NotesRepository
-): ViewModelProvider.NewInstanceFactory(){
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return NoteViewModel(notesRepository = NotesRepository) as T
     }
 }
