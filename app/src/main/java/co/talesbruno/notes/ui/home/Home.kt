@@ -8,6 +8,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -19,7 +22,10 @@ import androidx.core.R
 import co.talesbruno.notes.models.Note
 import co.talesbruno.notes.models.NoteViewModel
 import co.talesbruno.notes.ui.home.components.NoteItem
-
+import co.talesbruno.notes.ui.menu.DrawerContent
+import co.talesbruno.notes.ui.menu.DrawerHeader
+import co.talesbruno.notes.ui.menu.MenuItem
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -32,12 +38,49 @@ fun HomeScreen(noteViewModel: NoteViewModel) {
     var titleField by remember { mutableStateOf("") }
     var textField by remember { mutableStateOf("") }
 
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Notas") }
+                title = { Text(text = "Notas") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }) {
+                        Icon(Icons.Filled.Menu, contentDescription = null)
+                    }
+                }
             )
+        },
+        scaffoldState = scaffoldState,
+        drawerContent = {
+            DrawerHeader()
+            DrawerContent(
+                items = listOf(
+                    MenuItem(
+                        id = "home",
+                        title = "Home",
+                        contentDescription = "Go to home screen",
+                        icon = Icons.Default.Home
+                    ),
+                    MenuItem(
+                        id = "about",
+                        title = "About",
+                        contentDescription = "Go to about screen",
+                        icon = Icons.Default.Info
+                    ),
+                ),
+                onItemClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+                })
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { stateShowDialog = true }) {
