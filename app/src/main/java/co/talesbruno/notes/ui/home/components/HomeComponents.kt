@@ -76,26 +76,3 @@ fun NoteItem(
         }
 }
 }
-
-
-
-//Card(
-//backgroundColor = MaterialTheme.colors.primaryVariant,
-//modifier = Modifier
-//.padding(16.dp)
-//) {
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        modifier = Modifier.fillMaxWidth(),
-//    ) {
-//        Column(modifier = Modifier.weight(1f)) {
-//            Text(text = title, style = MaterialTheme.typography.subtitle2)
-//            Spacer(modifier = Modifier.size(16.dp))
-//            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-//                Text(text = note, style = MaterialTheme.typography.body2)
-//            }
-//        }
-//        Spacer(modifier = Modifier.size(16.dp))
-//
-//    }
-//}

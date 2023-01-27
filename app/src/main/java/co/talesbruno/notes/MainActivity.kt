@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    HomeScreen(noteViewModel = noteViewModel)
+                    Navigation(noteViewModel = noteViewModel)
                 }
             }
         }

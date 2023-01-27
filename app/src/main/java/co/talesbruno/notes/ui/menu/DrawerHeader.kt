@@ -28,7 +28,7 @@ fun DrawerHeader(modifier: Modifier = Modifier) {
             contentDescription = null,
             modifier
                 .clip(CircleShape)
-                .width(150.dp)
+                .width(50.dp)
                 .border(width = 2.dp, color = Color.Gray, shape = CircleShape)
         )
         Text(text = "teste@gmail.com", fontSize = TextUnit(14F, TextUnitType.Sp), color = Color.White)

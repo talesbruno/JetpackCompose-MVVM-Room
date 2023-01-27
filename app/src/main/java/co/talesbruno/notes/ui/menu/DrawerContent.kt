@@ -12,13 +12,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
 fun DrawerContent(
+    navController: NavController,
     modifier: Modifier = Modifier,
     items: List<MenuItem>,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-    onItemClick: (MenuItem) -> Unit
+//    onItemClick: (MenuItem) -> Unit
 ){
     LazyColumn(modifier){
         items(items) { item ->
@@ -26,7 +28,7 @@ fun DrawerContent(
                 modifier
                     .fillMaxWidth()
                     .clickable {
-                        onItemClick(item)
+                        navController.navigate(item.id)
                     }
                     .padding(16.dp)
             ) {

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.R
+import androidx.navigation.NavController
 import co.talesbruno.notes.models.Note
 import co.talesbruno.notes.models.NoteViewModel
 import co.talesbruno.notes.ui.home.components.NoteItem
@@ -30,7 +31,10 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(noteViewModel: NoteViewModel) {
+fun HomeScreen(
+    noteViewModel: NoteViewModel,
+    navController: NavController
+) {
 
     val notes by noteViewModel.notes.collectAsState(initial = listOf())
 
@@ -71,16 +75,19 @@ fun HomeScreen(noteViewModel: NoteViewModel) {
                     ),
                     MenuItem(
                         id = "about",
-                        title = "About",
+                        title = "Sobre",
                         contentDescription = "Go to about screen",
                         icon = Icons.Default.Info
                     ),
                 ),
-                onItemClick = {
-                    scope.launch {
-                        scaffoldState.drawerState.close()
-                    }
-                })
+                navController = navController
+//                        onItemClick = {
+//                    navController.navigate(it.id)
+//                    scope.launch {
+//                        scaffoldState.drawerState.close()
+//                    }
+//                }
+                )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { stateShowDialog = true }) {
