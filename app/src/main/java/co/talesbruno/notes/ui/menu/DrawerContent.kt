@@ -20,7 +20,6 @@ fun DrawerContent(
     modifier: Modifier = Modifier,
     items: List<MenuItem>,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-//    onItemClick: (MenuItem) -> Unit
 ){
     LazyColumn(modifier){
         items(items) { item ->

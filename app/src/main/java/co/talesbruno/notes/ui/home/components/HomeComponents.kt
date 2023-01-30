@@ -1,21 +1,24 @@
 package co.talesbruno.notes.ui.home.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.R
 import co.talesbruno.notes.models.Note
 import co.talesbruno.notes.models.NoteViewModel
+import kotlin.random.Random
 
 @Composable
 fun NoteItem(
@@ -23,11 +26,15 @@ fun NoteItem(
     noteViewModel: NoteViewModel
 ){
     var stateShowDialog by remember{ mutableStateOf(false) }
+    var stateShowItemDialog by remember{ mutableStateOf(false) }
+
     var titleField by remember { mutableStateOf(note.title) }
     var textField by remember { mutableStateOf(note.note) }
 
-   Surface(color = MaterialTheme.colors.primary,
-       modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+   Surface(color = Color.Companion.random(),
+       modifier = Modifier
+           .padding(vertical = 4.dp, horizontal = 8.dp)
+           .clickable { stateShowItemDialog = true }
    ) {
         Column(modifier = Modifier
             .padding(24.dp)
@@ -35,10 +42,10 @@ fun NoteItem(
             Row() {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = note.title)
-                    Text(text = note.note, style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.ExtraBold))
+                    Text(text = note.note, maxLines = 2, overflow = TextOverflow.Ellipsis,style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.ExtraBold))
                 }
                 IconButton(onClick = { noteViewModel.deleteNote(note)}) {
-                    Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                 }
                 IconButton(onClick = { stateShowDialog = true }) {
                     Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
@@ -72,7 +79,27 @@ fun NoteItem(
                         }
                     )
                 }
+                if (stateShowItemDialog){
+                    AlertDialog(
+                        onDismissRequest = { stateShowDialog = false },
+                        title = { Text(text = note.title)},
+                        text = { Text(text = note.note)},
+                        confirmButton = {
+                            IconButton(onClick = { stateShowDialog = false }) {
+                                Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                            }
+                        }
+                    )
+                }
             }
         }
 }
+}
+
+@Composable
+fun Color.Companion.random() : Color {
+    val red = Random.nextInt(256)
+    val green = Random.nextInt(256)
+    val blue = Random.nextInt(256)
+    return Color(red, green, blue)
 }

@@ -26,14 +26,17 @@ import co.talesbruno.notes.ui.home.components.NoteItem
 import co.talesbruno.notes.ui.menu.DrawerContent
 import co.talesbruno.notes.ui.menu.DrawerHeader
 import co.talesbruno.notes.ui.menu.MenuItem
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "PrivateResource")
 @Composable
 fun HomeScreen(
     noteViewModel: NoteViewModel,
-    navController: NavController
+    navController: NavController,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
 ) {
 
     val notes by noteViewModel.notes.collectAsState(initial = listOf())
@@ -42,25 +45,9 @@ fun HomeScreen(
     var titleField by remember { mutableStateOf("") }
     var textField by remember { mutableStateOf("") }
 
-    val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
-
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Notas") },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            scaffoldState.drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
-                        }
-                    }) {
-                        Icon(Icons.Filled.Menu, contentDescription = null)
-                    }
-                }
-            )
+            co.talesbruno.notes.ui.topappbar.TopAppBar(scope = scope, scaffoldState = scaffoldState)
         },
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -81,12 +68,6 @@ fun HomeScreen(
                     ),
                 ),
                 navController = navController
-//                        onItemClick = {
-//                    navController.navigate(it.id)
-//                    scope.launch {
-//                        scaffoldState.drawerState.close()
-//                    }
-//                }
                 )
         },
         floatingActionButton = {
