@@ -1,16 +1,17 @@
 package co.talesbruno.notes.ui.home.components
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +28,8 @@ fun NoteItem(
 ){
     var stateShowDialog by remember{ mutableStateOf(false) }
     var stateShowItemDialog by remember{ mutableStateOf(false) }
+
+    val localContext = LocalContext.current
 
     var titleField by remember { mutableStateOf(note.title) }
     var textField by remember { mutableStateOf(note.note) }
@@ -70,9 +73,13 @@ fun NoteItem(
                         },
                         confirmButton = {
                             Button(onClick = {
-                                noteViewModel.updateNote(Note(note.id, titleField, textField))
-                                stateShowDialog = false } ,
-                                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.androidx_core_secondary_text_default_material_light))
+                                if(titleField.isEmpty() || textField.isEmpty()){
+                                    Toast.makeText(localContext, "Não pode cadastrar uma Nota vazia!", Toast.LENGTH_LONG).show()
+                                }else{
+                                    noteViewModel.updateNote(Note(note.id, titleField, textField))
+                                    stateShowDialog = false }
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.androidx_core_secondary_text_default_material_light))
                         ) {
                             Text(text = "Salvar", color = Color.White)
                         }
@@ -81,11 +88,12 @@ fun NoteItem(
                 }
                 if (stateShowItemDialog){
                     AlertDialog(
-                        onDismissRequest = { stateShowDialog = false },
+                        backgroundColor = Color.Companion.random(),
+                        onDismissRequest = { stateShowItemDialog = false },
                         title = { Text(text = note.title)},
                         text = { Text(text = note.note)},
                         confirmButton = {
-                            IconButton(onClick = { stateShowDialog = false }) {
+                            IconButton(onClick = { stateShowItemDialog = false }) {
                                 Icon(imageVector = Icons.Default.Close, contentDescription = null)
                             }
                         }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -16,6 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle.State
 import androidx.navigation.NavController
 import co.talesbruno.notes.R
@@ -27,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AboutScreen(
+    closeDrawer: () -> Unit,
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
     navController: NavController
@@ -53,16 +58,21 @@ fun AboutScreen(
                         icon = Icons.Default.Info
                     ),
                 ),
-                navController = navController
+                navController = navController,
+                closeDrawer = closeDrawer
             )
         }
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(stringResource(R.string.about), style = MaterialTheme.typography.h4)
+            Text(
+                stringResource(R.string.about),
+                style = MaterialTheme.typography.h4,
+                fontSize = 14.sp
+            )
         }
     }
 }

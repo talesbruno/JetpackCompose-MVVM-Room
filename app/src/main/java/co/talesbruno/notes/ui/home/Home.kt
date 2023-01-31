@@ -1,6 +1,7 @@
 package co.talesbruno.notes.ui.home
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.R
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "PrivateResource")
 @Composable
 fun HomeScreen(
+    closeDrawer: () -> Unit,
     noteViewModel: NoteViewModel,
     navController: NavController,
     scope: CoroutineScope,
@@ -40,10 +43,12 @@ fun HomeScreen(
 ) {
 
     val notes by noteViewModel.notes.collectAsState(initial = listOf())
+    val localContext = LocalContext.current
 
     var stateShowDialog by remember { mutableStateOf(false) }
     var titleField by remember { mutableStateOf("") }
     var textField by remember { mutableStateOf("") }
+
 
     Scaffold(
         topBar = {
@@ -67,7 +72,8 @@ fun HomeScreen(
                         icon = Icons.Default.Info
                     ),
                 ),
-                navController = navController
+                navController = navController,
+                closeDrawer = closeDrawer
                 )
         },
         floatingActionButton = {
@@ -103,10 +109,14 @@ fun HomeScreen(
             },
             confirmButton = {
                 Button(onClick = {
-                    noteViewModel.createNote(Note(0, titleField, textField))
-                    titleField = ""
-                    textField = ""
-                    stateShowDialog = false} ,
+                    if(titleField.isEmpty() || textField.isEmpty()){
+                        Toast.makeText(localContext, "Não pode cadastrar uma Nota vazia!", Toast.LENGTH_LONG).show()
+                    }else{
+                        noteViewModel.createNote(Note(0, titleField, textField))
+                        titleField = ""
+                        textField = ""
+                        stateShowDialog = false}
+                    },
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.androidx_core_secondary_text_default_material_light))
             ) {
                 Text(text = "Salvar", color = Color.White)
