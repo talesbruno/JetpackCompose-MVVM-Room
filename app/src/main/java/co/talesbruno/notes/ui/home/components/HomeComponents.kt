@@ -16,20 +16,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.R
+import androidx.core.graphics.toColor
+import co.talesbruno.notes.R
 import co.talesbruno.notes.models.Note
 import co.talesbruno.notes.models.NoteViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
 fun NoteItem(
     note: Note,
-    noteViewModel: NoteViewModel
+    noteViewModel: NoteViewModel,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
 ){
     var stateShowDialog by remember{ mutableStateOf(false) }
     var stateShowItemDialog by remember{ mutableStateOf(false) }
-
-    val localContext = LocalContext.current
 
     var titleField by remember { mutableStateOf(note.title) }
     var textField by remember { mutableStateOf(note.note) }
@@ -44,8 +47,8 @@ fun NoteItem(
             .fillMaxWidth()) {
             Row() {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = note.title)
-                    Text(text = note.note, maxLines = 2, overflow = TextOverflow.Ellipsis,style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.ExtraBold))
+                    Text(text = note.title, style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.ExtraBold))
+                    Text(text = note.note, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 }
                 IconButton(onClick = { noteViewModel.deleteNote(note)}) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = null)
@@ -74,12 +77,18 @@ fun NoteItem(
                         confirmButton = {
                             Button(onClick = {
                                 if(titleField.isEmpty() || textField.isEmpty()){
-                                    Toast.makeText(localContext, "Não pode cadastrar uma Nota vazia!", Toast.LENGTH_LONG).show()
+                                    scope.launch {
+                                        scaffoldState.snackbarHostState.showSnackbar(
+                                            "Não pode cadastrar uma Nota vazia!",
+                                            "Ok",
+                                            SnackbarDuration.Long
+                                        )
+                                    }
                                 }else{
                                     noteViewModel.updateNote(Note(note.id, titleField, textField))
                                     stateShowDialog = false }
                                 },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.androidx_core_secondary_text_default_material_light))
+                                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.teal_200))
                         ) {
                             Text(text = "Salvar", color = Color.White)
                         }

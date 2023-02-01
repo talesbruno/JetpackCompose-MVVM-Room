@@ -27,7 +27,7 @@ fun Navigation(noteViewModel: NoteViewModel) {
             HomeScreen(noteViewModel = noteViewModel, navController = navController, scope = scope, scaffoldState = scaffoldState, closeDrawer = closeDrawer)
         }
         composable("about"){
-            AboutScreen(scope = scope, scaffoldState = scaffoldState, navController = navController, closeDrawer = closeDrawer)
+            AboutScreen(navController = navController)
         }
     }
 }

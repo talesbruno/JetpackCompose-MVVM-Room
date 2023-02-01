@@ -43,7 +43,6 @@ fun HomeScreen(
 ) {
 
     val notes by noteViewModel.notes.collectAsState(initial = listOf())
-    val localContext = LocalContext.current
 
     var stateShowDialog by remember { mutableStateOf(false) }
     var titleField by remember { mutableStateOf("") }
@@ -52,7 +51,20 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            co.talesbruno.notes.ui.topappbar.TopAppBar(scope = scope, scaffoldState = scaffoldState)
+            TopAppBar(
+                title = { Text(text = "Notas") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }) {
+                        Icon(Icons.Filled.Menu, contentDescription = null)
+                    }
+                }
+            )
         },
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -84,7 +96,7 @@ fun HomeScreen(
     ) {
         LazyColumn(modifier = Modifier.padding(vertical = 4.dp)){
             items(items = notes){ note ->
-                NoteItem(note = note, noteViewModel = noteViewModel)
+                NoteItem(note = note, noteViewModel = noteViewModel, scaffoldState = scaffoldState, scope = scope)
             }
         }
     }
@@ -110,7 +122,13 @@ fun HomeScreen(
             confirmButton = {
                 Button(onClick = {
                     if(titleField.isEmpty() || textField.isEmpty()){
-                        Toast.makeText(localContext, "Não pode cadastrar uma Nota vazia!", Toast.LENGTH_LONG).show()
+                        scope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                "Não pode cadastrar uma Nota vazia!",
+                                "Ok",
+                                SnackbarDuration.Long
+                            )
+                        }
                     }else{
                         noteViewModel.createNote(Note(0, titleField, textField))
                         titleField = ""
